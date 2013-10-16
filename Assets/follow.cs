@@ -5,7 +5,7 @@ public class follow : MonoBehaviour {
 	
 	public Transform target;
 	public Quaternion angle;
-	private float distance = 6;
+	private float distance = 6; // distance the camera is to target
 	private float height = 3;
 	// Use this for initialization
 	void Start () {
