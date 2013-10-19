@@ -30,24 +30,29 @@ public class moveToLocation : MonoBehaviour {
 			mouseRelased=true;
 		}
 		float distance = 5*Time.deltaTime;
-		RaycastHit ground;
-		Ray feeler;
 		if(distance<Vector3.Distance(transform.position,targetLocation)){
-			feeler = new Ray(transform.position, transform.forward);
+			RaycastHit ground;
+			Ray feeler;
+			feeler = new Ray(transform.position+(transform.up*0.25f), transform.forward);
 			if(Physics.Raycast(feeler,out ground, distance)){
-				distance-=Vector3.Distance(transform.position,ground.point);
-				transform.position = ground.point;
+			//	distance-=Vector3.Distance(transform.position,ground.point);
 				transform.up=ground.normal;
+				transform.position = ground.point;
+				surface=ground.collider.gameObject;
 			}else{
 				transform.position+=transform.forward*distance;
-				if(Physics.Raycast(transform.position,(surface.transform.position-transform.position).normalized,out ground)){
-					transform.position = ground.point;
+				feeler= new Ray(transform.position+(transform.up*0.25f),-transform.up);
+				if(Physics.Raycast(feeler,out ground)){
+					//	distance-=Vector3.Distance(transform.position,ground.point);
 					transform.up=ground.normal;
+					transform.position = ground.point;
+					surface=ground.collider.gameObject;
 				}	
-				distance=0;
 			}
-		}else{
-			transform.position=targetLocation;
+			Quaternion look = Quaternion.LookRotation((targetLocation-transform.position).normalized, transform.up);
+			look =Quaternion.AngleAxis(look.eulerAngles.y,transform.up);
+			transform.rotation =Quaternion.Euler(transform.rotation.eulerAngles.x+look.eulerAngles.x,look.eulerAngles.y,transform.eulerAngles.z+look.eulerAngles.z);
 		}
+		Debug.Log(surface);
 	}
 }
