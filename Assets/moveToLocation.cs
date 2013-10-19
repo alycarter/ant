@@ -5,9 +5,14 @@ public class moveToLocation : MonoBehaviour {
 	
 	private bool mouseRelased = true;
 	private Vector3 targetLocation;
+	private GameObject surface = null;
 	// Use this for initialization
 	void Start () {
-		targetLocation=transform.position;
+		RaycastHit hit;
+		if(Physics.Raycast(transform.position,Vector3.down,out hit)){
+			surface=hit.collider.gameObject;
+			targetLocation=hit.point;
+		}
 	}
 	
 	// Update is called once per frame
@@ -24,9 +29,25 @@ public class moveToLocation : MonoBehaviour {
 		}else{
 			mouseRelased=true;
 		}
-		if(Vector3.Distance(targetLocation,transform.position)>0.5){
-			transform.LookAt(targetLocation);
-			transform.position= Vector3.MoveTowards(transform.position,targetLocation,Time.deltaTime*5);
+		float distance = 5*Time.deltaTime;
+		RaycastHit ground;
+		Ray feeler;
+		if(distance<Vector3.Distance(transform.position,targetLocation)){
+			feeler = new Ray(transform.position, transform.forward);
+			if(Physics.Raycast(feeler,out ground, distance)){
+				distance-=Vector3.Distance(transform.position,ground.point);
+				transform.position = ground.point;
+				transform.up=ground.normal;
+			}else{
+				transform.position+=transform.forward*distance;
+				if(Physics.Raycast(transform.position,(surface.transform.position-transform.position).normalized,out ground)){
+					transform.position = ground.point;
+					transform.up=ground.normal;
+				}	
+				distance=0;
+			}
+		}else{
+			transform.position=targetLocation;
 		}
 	}
 }
