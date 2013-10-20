@@ -6,12 +6,14 @@ public class moveToLocation : MonoBehaviour {
 	private bool mouseRelased = true;
 	private Vector3 targetLocation;
 	private GameObject surface = null;
+	public Transform marker;
 	// Use this for initialization
 	void Start () {
 		RaycastHit hit;
 		if(Physics.Raycast(transform.position,Vector3.down,out hit)){
 			surface=hit.collider.gameObject;
 			targetLocation=hit.point;
+			
 		}
 	}
 	
@@ -29,14 +31,19 @@ public class moveToLocation : MonoBehaviour {
 		}else{
 			mouseRelased=true;
 		}
+		if(marker != null){
+			marker.position = targetLocation;
+			float change = 360*Time.deltaTime;
+			marker.rotation *= Quaternion.Euler(new Vector3(change,change,change));
+		}
 		float distance = 5*Time.deltaTime;
-		if(distance<Vector3.Distance(transform.position,targetLocation)){
+		if(0.5<Vector3.Distance(transform.position,targetLocation)){
 			RaycastHit ground;
 			Ray feeler;
 			feeler = new Ray(transform.position+(transform.up*0.25f), transform.forward);
 			if(Physics.Raycast(feeler,out ground, distance)){
 			//	distance-=Vector3.Distance(transform.position,ground.point);
-				transform.up=ground.normal;
+				//transform.up=ground.normal;
 				transform.position = ground.point;
 				surface=ground.collider.gameObject;
 			}else{
@@ -53,6 +60,5 @@ public class moveToLocation : MonoBehaviour {
 			look =Quaternion.AngleAxis(look.eulerAngles.y,transform.up);
 			transform.rotation =Quaternion.Euler(transform.rotation.eulerAngles.x+look.eulerAngles.x,look.eulerAngles.y,transform.eulerAngles.z+look.eulerAngles.z);
 		}
-		Debug.Log(surface);
 	}
 }

@@ -53,7 +53,7 @@ public class follow : MonoBehaviour {
 		Vector3 position = new Vector3(distance,target.position.y+height,0);
 		position = angle * position;
 		position+=target.position;
-		if(Physics.Raycast(target.position,(position-target.position),out hit)){
+		if(Physics.Raycast(target.position+(transform.up*0.25f),(position-target.position),out hit)){
 			if(Vector3.Distance(hit.point,target.position)<Vector3.Distance(position,target.position)){
 				position = hit.point;
 				distance=Vector2.Distance(new Vector2(target.position.x, target.position.z),new Vector2(position.x, position.z));
