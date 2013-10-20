@@ -9,7 +9,7 @@ public class moveToLocation : MonoBehaviour {
 	void Start () {
 		targetLocation=transform.position;
 	}
-	
+	//this is a test comment
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetMouseButtonDown(0)){
