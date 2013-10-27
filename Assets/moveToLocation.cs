@@ -49,6 +49,12 @@ public class moveToLocation : MonoBehaviour {
 			}else{
 				transform.position+=transform.forward*distance;
 				feeler= new Ray(transform.position+(transform.up*0.25f),-transform.up);
+				if(Physics.Raycast(feeler,out ground)){
+					//	distance-=Vector3.Distance(transform.position,ground.point);
+					transform.up=ground.normal;
+					transform.position = ground.point;
+					surface=ground.collider.gameObject;
+				}	
 				RaycastHit down;
 				bool downHit= Physics.Raycast(feeler,out down);
 				RaycastHit back;
